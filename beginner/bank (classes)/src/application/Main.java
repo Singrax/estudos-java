@@ -19,7 +19,6 @@ public class Main {
 
         System.out.println("Enter Account Number:");
         accountNumber = sc.nextInt();
-        sc.nextLine();
         System.out.println("Enter Account Holder:");
         name = sc.nextLine();
         System.out.println("Is there an initial deposit (y/n)?");
