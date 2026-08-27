@@ -148,7 +148,6 @@ public class Main {
         int totalGuests = 0;
 
         for (Booking b : bookings) {
-            // Se a data E o horário forem iguais, somamos a quantidade de pessoas
             if (b.getDate().equals(date) && b.getTime().equals(time)) {
                 totalGuests += b.getGuestCount();
             }
