@@ -9,6 +9,12 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Random;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.FileReader;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -21,6 +27,8 @@ public class Main {
         List<Cat> residentCats = new ArrayList<>();
         List<Booking> bookings = new ArrayList<>();
         List<String> availableTimes = new ArrayList<>();
+
+        loadBookings(bookings);
 
         //banco de dados fake temp
         residentCats.add(new Cat("Frajola", "Ama dormir no sol e odeia carinho na barriga.", 4));
@@ -41,6 +49,7 @@ public class Main {
             System.out.println("1 - Conhecer Gatinhos");
             System.out.println("2 - Reservar horário de visita");
             System.out.println("3 - Cancelar visita");
+            System.out.println("4 - Sair do Sistema");
             response = sc.nextInt();
             sc.nextLine();
 
@@ -126,6 +135,11 @@ public class Main {
                     System.out.println("Erro: ID não encontrado no sistema.");
                 }
             }
+            else if (response == 4) {
+                System.out.println("Salvando dados e encerrando...");
+                saveBookings(bookings);
+                menuContinue = false;
+            }
         }
         sc.close();
     }
@@ -150,4 +164,63 @@ public class Main {
         }
         return false;
     }
+    public static void saveBookings(List<Booking> bookings) {
+
+        String path = "bookings.csv";
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path))) {
+
+            for (Booking b : bookings) {
+
+                String line = b.getId() + "," +
+                        b.getClient().getName() + "," +
+                        b.getClient().getEmail() + "," +
+                        b.getClient().getPhone() + "," +
+                        b.getDate() + "," +
+                        b.getTime() + "," +
+                        b.getGuestCount();
+
+                bw.write(line);
+                bw.newLine();
+            }
+            System.out.println("Dados salvos com sucesso no arquivo: " + path);
+
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar o arquivo: " + e.getMessage());
+        }
+    }
+
+    public static void loadBookings(List<Booking> bookings) {
+        String path = "bookings.csv";
+
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+
+            String line = br.readLine();
+
+            while (line != null) {
+
+                String[] fields = line.split(",");
+
+                int id = Integer.parseInt(fields[0]);
+                String name = fields[1];
+                String email = fields[2];
+                String phone = fields[3];
+                String date = fields[4];
+                String time = fields[5];
+                int guestCount = Integer.parseInt(fields[6]);
+
+                Client client = new Client(name, email, phone);
+                Booking booking = new Booking(client, date, time, guestCount, id);
+
+                bookings.add(booking);
+
+                line = br.readLine();
+            }
+            System.out.println("Histórico de reservas carregado com sucesso\n");
+
+        } catch (Exception e) {
+            System.out.println("Aviso: Nenhum histórico encontrado. Iniciando sistema zerado.\n");
+        }
+    }
+
 }
