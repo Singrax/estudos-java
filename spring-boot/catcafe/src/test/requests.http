@@ -1,0 +1,18 @@
+### Listar reservas (GET)
+GET http://localhost:8080/api/bookings
+
+### Criar uma nova reserva (POST)
+POST http://localhost:8080/api/bookings
+Content-Type: application/json
+
+{
+  "id": 2,
+  "client": {
+    "name": "Maria",
+    "email": "maria@email.com",
+    "phone": "11888888888"
+  },
+  "date": "05/05/2025",
+  "time": "19:30-20:30",
+  "guestCount": 3
+}
